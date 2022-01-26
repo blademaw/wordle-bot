@@ -25,12 +25,12 @@ def run_tests(test_list):
             turn_arr[turns] += 1
         count += 1
 
-        if count/final % (1/4) == 0:
-            print("+ 1/4 progress")
+        if count == final/2:
+            print("1/2 progress")
     
     return turn_arr, fails, fail_arr, np.sum([ind*a for ind, a in enumerate(turn_arr)])/np.sum(turn_arr), \
         np.sum(turn_arr[:7])/np.sum(turn_arr), np.sum(turn_arr), np.max(np.argwhere(turn_arr > 0))
 
+ 
 turn_arr, fails, fail_arr, avg_turn, winrate, total, maxturn = run_tests(history_wins)
-
 print(f"\nWin%:\t{winrate*100}\nFails:\t{fails}\t{fail_arr}\nTotal:\t{int(total)}\nAvg:\t{np.round(avg_turn, 4)}\nMax:\t{maxturn}")

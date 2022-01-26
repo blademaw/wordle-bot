@@ -1,4 +1,5 @@
 # File to play around with Wordle
+# Automated version of worlde_user.py
 import matplotlib.pyplot as plt
 import numpy as np
 import re
@@ -28,11 +29,18 @@ def validate_guess(word, guess):
         used_arr[ord(char)-ord('a')] -= 1
     
     return res, "".join(out_s)
-        
+
+def check_letters(guess, mins, maxs):
+    # checks letters are within bounds
+    np_guess = np.array(list(guess))
+    res = [np.sum(np_guess == a) >= mins[ord(a)-ord('a')] and np.sum(np_guess == a) <= maxs[ord(a)-ord('a')] \
+         for a in guess]
+    return all(res)
 
 def play_game(word, word_arr, win_arr, guess="soare"):
     turn = 0
     solved = False
+    max_count = np.repeat(5, 26)
     
     while not solved:
         #print(f"{turn}\tI think\t{guess.upper()} from {len(word_arr)} candidates")
@@ -58,14 +66,27 @@ def play_game(word, word_arr, win_arr, guess="soare"):
         word_arr = np.array(list(filter(r.match, word_arr)))
 
         # 2 — axe words with(out) characters
+        min_count = np.zeros(26)
+        for i, char in enumerate(cor_array):
+            if char > 0:
+                min_count[ord(guess[i])-ord('a')] += 1
+
         in_list = np.array(list(guess))[np.where(cor_array == 2)]
         not_list = np.array(list(guess))[np.where(cor_array == 0)]
+        for char in np.array(list(guess))[(np.where((cor_array == 2) | (cor_array == 1)))]:
+            if char in not_list:
+                max_count[ord(char)-ord('a')] = np.sum(np.array(list(guess))[(np.where((cor_array == 2) | (cor_array == 1)))] == char)
+        
         not_list = np.array(list(set(not_list) - set(np.array(list(guess))[(np.where((cor_array == 1) | (cor_array == 2)))])))
         win_arr = win_arr[[not any(np.isin(not_list, list(a))) \
                             and all(np.isin(in_list, list(a))) for a in win_arr]]
+        
+        win_arr = win_arr[[check_letters(a, min_count, max_count) is True for a in win_arr]]
 
         word_arr = word_arr[[not any(np.isin(not_list, list(a))) \
                             and all(np.isin(in_list, list(a))) for a in word_arr]]
+
+        word_arr = word_arr[[check_letters(a, min_count, max_count) is True for a in word_arr]]
 
         # find best word to guess
         if np.sum(cor_array) == 0:
@@ -80,5 +101,7 @@ def play_game(word, word_arr, win_arr, guess="soare"):
                 #print("Couldn't find the word.")
                 return -1
         
+        if turn >= 20:
+            print("GAME IS STUCK IN INFINITE LOOP")
     
     return None
