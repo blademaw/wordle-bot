@@ -1,9 +1,6 @@
 # File for a user-run Wordle
-from multiprocessing.sharedctypes import Value
-import matplotlib.pyplot as plt
 import numpy as np
-import re
-import inits
+import re, inits, sys
 from wordfreq import word_frequency
 
 # frequency arrays of letters
@@ -113,7 +110,13 @@ def play_game(word_arr, win_arr, guess="soare"):
     
     return None
 
-with open("wordle-allowed-guesses.txt", 'r') as file1:
-    with open("wordle-answers-alphabetical.txt", 'r') as file2:
-        wins = file2.read()
-        play_game(sorted((file1.read() + "\n" + wins).split("\n")), wins.split("\n"))
+if __name__ == "__main__":
+    guess = "soare"
+    if len(sys.argv) > 1: guess = sys.argv[1].lower()
+
+    with open("wordle-allowed-guesses.txt", 'r') as file1:
+        with open("wordle-answers-alphabetical.txt", 'r') as file2:
+            wins = file2.read()
+            play_game(sorted((file1.read() + "\n" + wins).split("\n")),
+                      wins.split("\n"),
+                      guess=guess)
