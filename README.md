@@ -5,7 +5,7 @@ A naïve, simple bot for solving Wordle puzzles.
 
 wordle-bot is a suboptimal, inefficient proprietary aide for solving daily Wordle puzzles. He was programmed in less than a day and purely for fun, and was not made to compete with other [state-of-the-art Wordle solvers](https://freshman.dev/wordle/#/leaderboard).
 
-When tested on `wordle-answers-alphabetical.txt`, wordle-bot had an average win rate of ~98%, and won games in an average of 3.877 turns (high-end bots win on average between 3.421 and 3.550 turns as of time of writing).
+When tested on `wordle-answers-alphabetical.txt`, wordle-bot had an average win rate of ~98%, and won games in an average of 3.81 turns (high-end bots win on average between 3.421 and 3.550 turns as of time of writing).
 
 ## Method & capabilities
 
